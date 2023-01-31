@@ -10,9 +10,15 @@
 const int UDP_PAYLOAD = 8200;
 const int NUM_PACKETS = 1000;
 
-int cmp(const void *a, const void *b) {
+int cmp64(const void *a, const void *b) {
   uint64_t *x = (uint64_t *)a;
   uint64_t *y = (uint64_t *)b;
+  return *x - *y;
+}
+
+int cmpint(const void *a, const void *b) {
+  int *x = (int *)a;
+  int *y = (int *)b;
   return *x - *y;
 }
 
@@ -35,6 +41,7 @@ int main() {
 
   // Allocate counts on heap (too big for stack)
   uint64_t *counts = (uint64_t *)malloc(NUM_PACKETS * sizeof(uint64_t));
+  int *deltas = (int *)malloc((NUM_PACKETS - 1) * sizeof(int));
 
   while (packets < NUM_PACKETS) {
     rcv_bytes = recvfrom(fd, buf, UDP_PAYLOAD, 0, NULL, NULL);
@@ -51,11 +58,28 @@ int main() {
   }
 
   // Sort counts
-  qsort(counts, NUM_PACKETS, sizeof(uint64_t), cmp);
+  qsort(counts, NUM_PACKETS, sizeof(uint64_t), cmp64);
 
-  // And print them
-  for (int i = 0; i < NUM_PACKETS; i++) {
-    printf("%" PRIu64 "\n", counts[i]);
+  // And compute deltas
+  for (int i = 0; i < NUM_PACKETS - 1; i++) {
+    deltas[i] = (int)(counts[i + 1] - counts[i]);
+  }
+
+  // And sort the deltas
+  qsort(deltas, NUM_PACKETS - 1, sizeof(int), cmpint);
+
+  // Then print deltas
+  int last_delta = 0;
+  int last_delta_cnt = 0;
+  for (int i = 0; i < NUM_PACKETS - 1; i++) {
+    int d = deltas[i];
+    if (d != last_delta) {
+      printf("%d,%d", last_delta, last_delta_cnt);
+      last_delta = d;
+      last_delta_cnt = 1;
+    } else {
+      last_delta_cnt += 1;
+    }
   }
 
   // not that this matters, the OS will do it for us
