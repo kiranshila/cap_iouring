@@ -91,6 +91,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             let buf = vec![0; 16_384];
             let (result, buf) = sock.recv_from(buf).await;
             if let Ok((n, _)) = result {
+                println!("{n}");
                 if n == PAYLOAD_SIZE {
                     let pl = Payload::from_bytes(&buf);
                     counts[packets] = pl.count;
