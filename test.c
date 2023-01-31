@@ -74,7 +74,7 @@ int main() {
   for (int i = 0; i < NUM_PACKETS - 1; i++) {
     int d = deltas[i];
     if (d != last_delta) {
-      printf("%d,%d", last_delta, last_delta_cnt);
+      printf("%d,%d\n", last_delta, last_delta_cnt);
       last_delta = d;
       last_delta_cnt = 1;
     } else {
