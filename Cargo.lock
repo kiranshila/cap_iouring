@@ -20,6 +20,7 @@ version = "0.1.0"
 dependencies = [
  "itertools",
  "num-complex",
+ "socket2",
  "tokio-uring",
 ]
 

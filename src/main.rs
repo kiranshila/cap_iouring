@@ -1,5 +1,6 @@
 use itertools::Itertools;
 use num_complex::Complex;
+use socket2::{Protocol, Socket, Type};
 use std::net::SocketAddr;
 use tokio_uring::net::UdpSocket;
 
@@ -84,9 +85,16 @@ impl Payload {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     tokio_uring::start(async {
         let local: SocketAddr = "0.0.0.0:60000".parse().unwrap();
-        let sock = UdpSocket::bind(local).await?;
+
+        let sock = Socket::new(socket2::Domain::IPV4, Type::DGRAM, Some(Protocol::UDP))?;
+        sock.set_reuse_port(true)?;
+        sock.set_nonblocking(true)?;
+        sock.bind(&local.into())?;
+
+        let sock = UdpSocket::from_std(sock.into());
         let mut counts = vec![0u64; CAP_PACKS];
         let mut packets = 0usize;
+
         while packets < CAP_PACKS {
             let buf = vec![0; PAYLOAD_SIZE];
             let (result, buf) = sock.recv_from(buf).await;
