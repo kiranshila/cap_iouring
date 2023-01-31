@@ -88,8 +88,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         let sock = Socket::new(socket2::Domain::IPV4, Type::DGRAM, Some(Protocol::UDP))?;
         sock.set_reuse_port(true)?;
+        sock.set_reuse_address(true)?;
         sock.set_nonblocking(true)?;
         sock.bind(&local.into())?;
+        sock.set_recv_buffer_size(2 * 256 * 1024 * 1024)?; // 256 MB (like Vikram)
 
         let sock = UdpSocket::from_std(sock.into());
         let mut counts = vec![0u64; CAP_PACKS];
