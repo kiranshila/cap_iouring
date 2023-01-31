@@ -88,7 +88,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let mut counts = vec![0u64; CAP_PACKS];
         let mut packets = 0usize;
         while packets < CAP_PACKS {
-            let buf = vec![0; 9000];
+            let buf = vec![0; 16_384];
             let (result, buf) = sock.recv_from(buf).await;
             if let Ok((n, _)) = result {
                 if n == PAYLOAD_SIZE {
