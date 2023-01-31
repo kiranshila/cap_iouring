@@ -63,15 +63,15 @@ impl Payload {
     #[must_use]
     pub fn from_bytes(bytes: &[u8]) -> Self {
         let mut payload = Payload::default();
-        for (i, word) in bytes[TIMESTAMP_SIZE..].chunks_exact(WORD_SIZE).enumerate() {
-            // Each word contains two frequencies for each polarization
-            // [A1 B1 A2 B2]
-            // Where each channel is [Re Im] as FixedI8<7>
-            payload.pol_a[2 * i] = Channel::new(word[0] as i8, word[1] as i8);
-            payload.pol_a[2 * i + 1] = Channel::new(word[4] as i8, word[5] as i8);
-            payload.pol_b[2 * i] = Channel::new(word[2] as i8, word[3] as i8);
-            payload.pol_b[2 * i + 1] = Channel::new(word[6] as i8, word[7] as i8);
-        }
+        // for (i, word) in bytes[TIMESTAMP_SIZE..].chunks_exact(WORD_SIZE).enumerate() {
+        //     // Each word contains two frequencies for each polarization
+        //     // [A1 B1 A2 B2]
+        //     // Where each channel is [Re Im] as FixedI8<7>
+        //     payload.pol_a[2 * i] = Channel::new(word[0] as i8, word[1] as i8);
+        //     payload.pol_a[2 * i + 1] = Channel::new(word[4] as i8, word[5] as i8);
+        //     payload.pol_b[2 * i] = Channel::new(word[2] as i8, word[3] as i8);
+        //     payload.pol_b[2 * i + 1] = Channel::new(word[6] as i8, word[7] as i8);
+        // }
         // Then unpack the timestamp/order
         payload.count = u64::from_be_bytes(
             bytes[0..TIMESTAMP_SIZE]
