@@ -8,7 +8,7 @@
 #include <sys/socket.h>
 
 const int UDP_PAYLOAD = 8200;
-const int NUM_PACKETS = 1000;
+const int NUM_PACKETS = 10000000;
 
 int cmp64(const void *a, const void *b) {
   uint64_t *x = (uint64_t *)a;
