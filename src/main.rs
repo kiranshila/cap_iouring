@@ -62,6 +62,8 @@ impl Payload {
     #[must_use]
     pub fn from_bytes(bytes: &[u8]) -> Self {
         let mut payload = Payload::default();
+        println!("{}", bytes.len());
+        println!("{}", bytes[TIMESTAMP_SIZE..].len());
         for (i, word) in bytes[TIMESTAMP_SIZE..].chunks_exact(WORD_SIZE).enumerate() {
             // Each word contains two frequencies for each polarization
             // [A1 B1 A2 B2]
@@ -91,7 +93,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             let buf = vec![0; 16_384];
             let (result, buf) = sock.recv_from(buf).await;
             if let Ok((n, _)) = result {
-                println!("{n}");
                 if n == PAYLOAD_SIZE {
                     let pl = Payload::from_bytes(&buf);
                     counts[packets] = pl.count;
