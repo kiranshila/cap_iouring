@@ -12,7 +12,7 @@ const WORD_SIZE: usize = 8;
 const SPECTRA_SIZE: usize = 8192;
 /// Total UDP payload size
 pub const PAYLOAD_SIZE: usize = SPECTRA_SIZE + TIMESTAMP_SIZE;
-const CAP_PACKS: usize = 1_000_000;
+const CAP_PACKS: usize = 10_000_000;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Channel(Complex<i8>);
